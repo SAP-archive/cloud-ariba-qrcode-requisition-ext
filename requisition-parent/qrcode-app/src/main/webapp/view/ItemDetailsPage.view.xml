@@ -1,0 +1,58 @@
+<!DOCTYPE xml>
+<core:View height="100%" xmlns:core="sap.ui.core" xmlns:m="sap.m"
+	xmlns="sap.uxap" xmlns:forms="sap.ui.layout.form" controllerName="sap.hcp.ariba.ext.controller.ItemDetails">
+	<m:Page showHeader="false">
+
+		<ObjectPageLayout>
+			<headerTitle>
+				<ObjectPageHeader objectTitle="{/shortName}"
+					headerDesign="Dark">
+				</ObjectPageHeader>
+			</headerTitle>
+
+			<headerContent>
+				<m:Input width="50%" value="{/quantity}" class="sapUiTinyMargin"
+					type="Number" maxLength="6"></m:Input>
+				<m:Button type="Emphasized" icon="sap-icon://add" class="sapUiTinyMargin"
+					press="increaseQty" />
+				<m:Button type="Emphasized" icon="sap-icon://less" class="sapUiTinyMargin"
+					press="decreaseQty" />
+			</headerContent>
+
+			<sections>
+				<ObjectPageSection title="{i18n>itemDetailsTitle}">
+					<subSections>
+						<ObjectPageSubSection mode="Collapsed" class="sapUiSmallMargin">
+							<blocks>
+								<forms:SimpleForm maxContainerCols="2"
+									editable="false" layout="ResponsiveGridLayout" minWidth="1024">
+									<m:Image src="{/image}" densityAware="false" class="sapUiTinyMargin" />
+									<m:Text
+										text="{i18n>priceLabel} {/contractPrice/amount} {/contractPrice/currency}"
+										class="sapUiTinyMargin" />
+									<m:Text text="{i18n>manufacturerNameLabel} {/manufacturerName}"
+										class="sapUiTinyMargin" />
+									<m:Text text="{i18n>supplierNameLabel} {/supplierName}"
+										class="sapUiTinyMargin" />
+									<m:Text text="{i18n>descriptionLabel} {/description}"
+										class="sapUiTinyMargin" />
+									<m:Link text="{/url}" target="_blank" class="sapUiTinyMargin"
+										href="{/url}" />
+								</forms:SimpleForm>
+							</blocks>
+						</ObjectPageSubSection>
+					</subSections>
+				</ObjectPageSection>
+			</sections>
+		</ObjectPageLayout>
+
+		<m:footer>
+			<m:Toolbar>
+				<m:ToolbarSpacer />
+				<m:Button text="{i18n>submitButton}" type="Emphasized"
+					press="submit" id="submitButton" />
+			</m:Toolbar>
+		</m:footer>
+
+	</m:Page>
+</core:View>

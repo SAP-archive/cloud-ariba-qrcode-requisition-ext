@@ -1,0 +1,62 @@
+<!DOCTYPE xml>
+<core:View height="100%" xmlns:core="sap.ui.core" xmlns:m="sap.m"
+	xmlns="sap.uxap" xmlns:forms="sap.ui.layout.form"
+	xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
+	controllerName="sap.hcp.ariba.ext.controller.QRCodes">
+	<m:Page showHeader="false">
+
+		<ObjectPageLayout>
+
+			<headerTitle>
+				<ObjectPageHeader objectTitle="{i18n>scanItemTitle}"
+					headerDesign="Dark" />
+			</headerTitle>
+
+			<sections>
+				<ObjectPageSection showTitle="false">
+					<subSections>
+						<ObjectPageSubSection>
+							<blocks>
+								<forms:SimpleForm maxContainerCols="2"
+									editable="false" layout="ResponsiveGridLayout" minWidth="1024"
+									title="{/items/0/shortName}">
+									<m:Image src="{/items/0/image}" height="300px" press="onPress"
+										app:partNumber="{/items/0/supplierPartId}" />
+									<m:Image
+										src="/qrcode-app/api/v1/qrcode/create?partNumber={/items/0/supplierPartId}"
+										press="onPress" app:partNumber="{/items/0/supplierPartId}" />
+								</forms:SimpleForm>
+								<forms:SimpleForm maxContainerCols="2"
+									editable="false" layout="ResponsiveGridLayout" minWidth="1024"
+									title="{/items/1/shortName}">
+									<m:Image src="{/items/1/image}" height="300px" press="onPress"
+										app:partNumber="{/items/1/supplierPartId}" />
+									<m:Image
+										src="/qrcode-app/api/v1/qrcode/create?partNumber={/items/1/supplierPartId}"
+										press="onPress" app:partNumber="{/items/1/supplierPartId}" />
+								</forms:SimpleForm>
+								<forms:SimpleForm maxContainerCols="2"
+									editable="false" layout="ResponsiveGridLayout" minWidth="1024"
+									title="{/items/2/shortName}">
+									<m:Image src="{/items/2/image}" height="300px" press="onPress"
+										app:partNumber="{/items/2/supplierPartId}" />
+									<m:Image
+										src="/qrcode-app/api/v1/qrcode/create?partNumber={/items/2/supplierPartId}"
+										press="onPress" app:partNumber="{/items/2/supplierPartId}" />
+								</forms:SimpleForm>
+							</blocks>
+						</ObjectPageSubSection>
+					</subSections>
+				</ObjectPageSection>
+			</sections>
+		</ObjectPageLayout>
+
+		<m:footer>
+			<m:Toolbar>
+				<m:ToolbarSpacer />
+			</m:Toolbar>
+		</m:footer>
+
+	</m:Page>
+
+</core:View>

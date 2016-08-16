@@ -1,0 +1,8 @@
+# eclipse resources
+/target/
+.classpath
+.project
+.settings
+
+# Auto downloaded java code
+/src/*
