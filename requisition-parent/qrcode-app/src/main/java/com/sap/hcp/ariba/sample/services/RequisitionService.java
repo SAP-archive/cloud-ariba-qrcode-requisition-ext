@@ -1,7 +1,6 @@
 package com.sap.hcp.ariba.sample.services;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.servlet.UnavailableException;
@@ -31,9 +30,6 @@ public class RequisitionService {
 		Response response;
 		RequisitionImportPullReply result = null;
 		Requisition requisition = new Requisition();
-		requisition.setComment("This requisition is imported by HCP on date");
-		requisition.setName("HCP XML Req Import");
-		requisition.setNeedBy(new Date());
 
 		List<Item> items = new ArrayList<>();
 

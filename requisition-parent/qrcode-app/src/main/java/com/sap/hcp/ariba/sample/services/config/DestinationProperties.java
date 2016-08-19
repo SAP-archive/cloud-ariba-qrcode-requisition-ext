@@ -4,10 +4,11 @@ import javax.servlet.UnavailableException;
 
 public class DestinationProperties {
 
+	private static final String REQUISITION_NAME_DEST_PARAMETER = "requisitionName";
+	private static final String REQUISITION_COMMENT_DEST_PARAMETER = "requisitionComment";
 	private static final String URL_DEST_PARAMETER = "URL";
 	private static final String PASSWORD_DEST_PARAMETER = "Password";
 	private static final String USER_DEST_PARAMETER = "User";
-
 	private static final String CURRENCY_DEST_PARAMETER = "currency";
 	private static final String COMMODITY_CODE_DEST_PARAMETER = "commodityCode";
 	private static final String HEADER_UNIQUE_NAME_DEST_PARAMETER = "headerUniqueName";
@@ -26,6 +27,14 @@ public class DestinationProperties {
 		if (connectivityConfiguration == null) {
 			connectivityConfiguration = new ConnectivityConfig();
 		}
+	}
+
+	public String getRequisitionName() {
+		return getProperty(REQUISITION_NAME_DEST_PARAMETER);
+	}
+
+	public String getRequisitionComment() {
+		return getProperty(REQUISITION_COMMENT_DEST_PARAMETER);
 	}
 
 	public String getURL() {

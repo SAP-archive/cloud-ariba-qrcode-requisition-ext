@@ -23,19 +23,18 @@ import ariba.buyer.vrealm_3.requisition.RequisitionImportPullReply;
  * Facade for Requisition Import API.
  *
  */
-public class RequisitionImportFacade extends AuthenticatedUserFacade{
+public class RequisitionImportFacade extends AuthenticatedUserFacade {
 
 	private static final String REQUISITION_IMPORT_PULL_WSDL = "/RequisitionImportPull?wsdl";
 
 	private static final String ERROR_EXCEPTION_OCCURRED_WHILE_TRYING_TO_SUBMIT_THE_REQUISITON = "Exception occurred while trying to submit the requisiton";
 
 	private static final Logger logger = LoggerFactory.getLogger(RequisitionImportFacade.class);
-	
-	
+
 	public RequisitionImportFacade(String wsdlName) throws UnavailableException {
 		super(wsdlName);
 	}
-	
+
 	public RequisitionImportFacade() throws UnavailableException {
 		this(REQUISITION_IMPORT_PULL_WSDL);
 	}
@@ -53,11 +52,14 @@ public class RequisitionImportFacade extends AuthenticatedUserFacade{
 	public RequisitionImportPullReply importRequisition(Requisition requisition) throws UnavailableException {
 		RequisitionImportPullReply submitRequisition = null;
 		DestinationProperties destinationProperties = new DestinationProperties();
-		try {	
+		try {
+			requisition.setComment(destinationProperties.getRequisitionComment());
+			requisition.setName(destinationProperties.getRequisitionName());
+			requisition.setNeedBy(new Date());
 			PrepareRequisitionParameter reqParameter = prepareRequisitionParameter(requisition, destinationProperties);
-			if(wsdlURL !=null && authorization != null) {
-				submitRequisition = RequisitionImportPullPortType_RequisitionImportPullPortType_Client.submitRequisition(wsdlURL, reqParameter,
-					authorization);
+			if (wsdlURL != null && authorization != null) {
+				submitRequisition = RequisitionImportPullPortType_RequisitionImportPullPortType_Client
+						.submitRequisition(wsdlURL, reqParameter, authorization);
 			}
 		} catch (DatatypeConfigurationException e) {
 

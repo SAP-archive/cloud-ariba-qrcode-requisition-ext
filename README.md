@@ -29,7 +29,7 @@ There are two possible usage scenarios for this application:
 If you are deploying it on the Cloud, see [Creating and Deleting Destinations on the Cloud](https://help.hana.ondemand.com/help/frameset.htm?94dddf7d9e56401ba1719b7e836d8ee9.html).
 
 5. Deploy the application. 
->*Note*: Make sure you select the Java Web Tomcat 7 Server as a runtime environment.
+>*Note*: Make sure you select the Java Web Tomcat 7 as a runtime environment.
 
 6. To access the application, follow the steps described in the [Access the application](#access-the-application) section.
 
@@ -59,6 +59,8 @@ The HTTP API Destination looks like this:
 	requester=<requester user>
 	originatingSystemId=<system id>
 	businessUnit=<business unit>
+	requisitionComment=<requisition comment>
+	requisitionName=<requisition name>
 
 ## Access the application
 
