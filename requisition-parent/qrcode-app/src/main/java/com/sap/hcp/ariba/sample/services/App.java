@@ -5,7 +5,7 @@ import java.util.Set;
 
 import javax.ws.rs.core.Application;
 
-import org.codehaus.jackson.jaxrs.JacksonJaxbJsonProvider;
+import org.codehaus.jackson.jaxrs.JacksonJsonProvider;
 
 /**
  * Used to group all services in one application
@@ -13,33 +13,16 @@ import org.codehaus.jackson.jaxrs.JacksonJaxbJsonProvider;
  */
 public class App extends Application {
 
-	private Set<Object> singletons = new HashSet<>();
-
-	/**
-	 * Constructor used to initialize all services.
-	 */
-	public App() {
-
-		setSingletons();
-	}
-
-	private void setSingletons() {
-
-		getSingletons().add(new JacksonJaxbJsonProvider());
-		getSingletons().add(new RequisitionService());
-		getSingletons().add(new CatalogService());
-		getSingletons().add(new QRCodeService());
-
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see javax.ws.rs.core.Application#getSingletons()
-	 */
 	@Override
-	public Set<Object> getSingletons() {
+	public Set<Class<?>> getClasses() {
 
-		return singletons;
+		Set<Class<?>> classes = new HashSet<Class<?>>();
+		classes.add(JacksonJsonProvider.class);
+		classes.add(RequisitionService.class);
+		classes.add(CatalogService.class);
+		classes.add(QRCodeService.class);
+		classes.add(PartNumberService.class);
+
+		return classes;
 	}
 }

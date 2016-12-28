@@ -1,127 +1,105 @@
 package com.sap.hcp.ariba.sample.facade;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.servlet.UnavailableException;
-import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.soap.SOAPException;
+import javax.xml.soap.SOAPMessage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.sap.hcp.ariba.sample.model.Item;
-import com.sap.hcp.ariba.sample.model.Requisition;
+import com.sap.hcp.ariba.sample.authentication.Authentication;
 import com.sap.hcp.ariba.sample.services.config.DestinationProperties;
 
-import ariba.buyer.vrealm_3.requisition.PrepareItemParameter;
-import ariba.buyer.vrealm_3.requisition.PrepareRequisitionParameter;
-import ariba.buyer.vrealm_3.requisition.RequisitionImportPullPortType_RequisitionImportPullPortType_Client;
-import ariba.buyer.vrealm_3.requisition.RequisitionImportPullReply;
+import ariba.buyer.requisition.Requisition;
+import ariba.buyer.requisition.RequisitionItem;
+import ariba.buyer.requisition.RequisitionSOAPClient;
 
 /**
  * Facade for Requisition Import API.
  *
  */
-public class RequisitionImportFacade extends AuthenticatedUserFacade {
+public class RequisitionImportFacade extends Authentication {
 
-	private static final String REQUISITION_IMPORT_PULL_WSDL = "/RequisitionImportPull?wsdl";
+	private static final String REQUISITION_IMPORT_PULL_PATH = "/RequisitionImportPull";
 
 	private static final String ERROR_EXCEPTION_OCCURRED_WHILE_TRYING_TO_SUBMIT_THE_REQUISITON = "Exception occurred while trying to submit the requisiton";
 
 	private static final Logger logger = LoggerFactory.getLogger(RequisitionImportFacade.class);
 
-	public RequisitionImportFacade(String wsdlName) throws UnavailableException {
-		super(wsdlName);
+	/**
+	 * CatalogSearchFacade constructor
+	 *
+	 * @param servicePath
+	 *            - service path
+	 */
+	public RequisitionImportFacade(String servicePath) {
+		super(servicePath);
 	}
 
-	public RequisitionImportFacade() throws UnavailableException {
-		this(REQUISITION_IMPORT_PULL_WSDL);
+	/**
+	 * CatalogSearchFacade default constructor
+	 *
+	 */
+	public RequisitionImportFacade() {
+		this(REQUISITION_IMPORT_PULL_PATH);
 	}
 
 	/**
 	 * Import requisition for approval.
-	 * 
+	 *
 	 * @param requisition
 	 *            - the requisition to be imported.
-	 * @return - true if the requisition is submitted successfully and false
-	 *         otherwise.
-	 * @throws UnavailableException
-	 *             - thrown if connectivity configuration failed.
+	 * @return SOAPMessage if the requisition is submitted successfully.
+	 * @throws SOAPException
+	 *             if the requisition is not submitted successfully.
 	 */
-	public RequisitionImportPullReply importRequisition(Requisition requisition) throws UnavailableException {
-		RequisitionImportPullReply submitRequisition = null;
+	public SOAPMessage importRequisition(Requisition requisition) throws SOAPException {
+		SOAPMessage submitRequisition = null;
 		DestinationProperties destinationProperties = new DestinationProperties();
 		try {
-			requisition.setComment(destinationProperties.getRequisitionComment());
-			requisition.setName(destinationProperties.getRequisitionName());
-			requisition.setNeedBy(new Date());
-			PrepareRequisitionParameter reqParameter = prepareRequisitionParameter(requisition, destinationProperties);
-			if (wsdlURL != null && authorization != null) {
-				submitRequisition = RequisitionImportPullPortType_RequisitionImportPullPortType_Client
-						.submitRequisition(wsdlURL, reqParameter, authorization);
-			}
-		} catch (DatatypeConfigurationException e) {
+			Requisition preparedRequisition = prepareRequisition(requisition, destinationProperties);
 
+			submitRequisition = RequisitionSOAPClient.submit(url, preparedRequisition, user, password);
+		} catch (SOAPException e) {
 			logger.error(ERROR_EXCEPTION_OCCURRED_WHILE_TRYING_TO_SUBMIT_THE_REQUISITON, e);
-			return submitRequisition;
+			throw e;
 		}
 
 		return submitRequisition;
 	}
 
-	private PrepareRequisitionParameter prepareRequisitionParameter(Requisition requisition,
-			DestinationProperties destinationProperties) {
-
-		Date needByDate = requisition.getNeedBy();
-		String headerComment = requisition.getComment();
-		String headerName = requisition.getName();
-
+	private Requisition prepareRequisition(Requisition requisition, DestinationProperties destinationProperties) {
 		String requester = (requisition.getRequester() != null) ? requisition.getRequester()
 				: destinationProperties.getRequester();
-		String preparer = (requisition.getRequester() != null) ? requisition.getRequester()
+		String preparer = (requisition.getPreparer() != null) ? requisition.getPreparer()
 				: destinationProperties.getPreparer();
 
-		List<Item> items = requisition.getItems();
+		List<RequisitionItem> items = requisition.getItems();
+		List<RequisitionItem> RequisitionItemList = prepareRequisitionItems(items, destinationProperties);
 
-		PrepareRequisitionParameter reqParameter = new PrepareRequisitionParameter(needByDate,
-				destinationProperties.getShipTo(), destinationProperties.getBusinessUnit(),
-				destinationProperties.getDeliverTo(), headerComment, headerName,
-				destinationProperties.getOriginatingSystem(), destinationProperties.getOrigintingSystemId(),
-				destinationProperties.getPasswordAdapter(), preparer, requester,
-				destinationProperties.getHeaderUniqueName());
+		requisition.needByDate(new Date()).headerComment(destinationProperties.getRequisitionComment())
+				.headerName(destinationProperties.getRequisitionName()).shipTo(destinationProperties.getShipTo())
+				.businessUnit(destinationProperties.getBusinessUnit()).deliverTo(destinationProperties.getDeliverTo())
+				.originatingSystem(destinationProperties.getOriginatingSystem())
+				.originatingSystemId(destinationProperties.getOrigintingSystemId())
+				.passwordAdapter(destinationProperties.getPasswordAdapter()).preparer(preparer).requester(requester)
+				.headerUniqueName(destinationProperties.getHeaderUniqueName())
+				.namespaceXMLNSvariant(destinationProperties.getNamespaceXMLNSvariant()).items(RequisitionItemList);
 
-		reqParameter.items = prepareRequisitionItems(items, reqParameter, destinationProperties);
-
-		return reqParameter;
+		return requisition;
 	}
 
-	private List<PrepareItemParameter> prepareRequisitionItems(List<Item> items,
-			PrepareRequisitionParameter reqParameter, DestinationProperties destinationProperties) {
+	private List<RequisitionItem> prepareRequisitionItems(List<RequisitionItem> prepareItems,
+			DestinationProperties destinationProperties) {
 
-		List<PrepareItemParameter> prepareItems = new ArrayList<>();
+		for (RequisitionItem item : prepareItems) {
+			item.shipTo(destinationProperties.getShipTo()).deliverTo(destinationProperties.getDeliverTo())
+					.billingAddress(destinationProperties.getBillingAddress())
+					.commonCommodityCodeDomain(destinationProperties.getCommonCommodityCodeDomain())
+					.commonCommodityCodeName(destinationProperties.getCommonCommodityCodeName());
 
-		for (Item item : items) {
-
-			String description = item.getDescription();
-			String manPartNumber = item.getManPartNumber();
-			String commodityCode = item.getCommodityCode();
-			String currency = item.getCurrency();
-			Double quantity = item.getQuantity();
-			String supplier = item.getSupplier();
-			String supplierPartNumber = item.getSupplierPartNumber();
-			String unitOfMeasure = item.getUnitOfMeasure();
-			String itemComment = "This line item is imported by HCP on " + new Date();
-			Double itemPrice = item.getPrice();
-			long numberInCollection = item.getNumberInCollection();
-			long originatingSystemLineNumber = item.getOriginatingSystemLineNumber();
-
-			PrepareItemParameter itemParameter = new PrepareItemParameter(reqParameter.needByDate, reqParameter.shipTo,
-					reqParameter.deliverTo, commodityCode, destinationProperties.getBillingAddress(), manPartNumber,
-					description, currency, supplierPartNumber, unitOfMeasure, itemComment, supplier, null, null, null,
-					quantity, itemPrice, numberInCollection, originatingSystemLineNumber);
-
-			prepareItems.add(itemParameter);
 		}
 
 		return prepareItems;

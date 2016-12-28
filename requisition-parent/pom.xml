@@ -8,19 +8,9 @@
 	<name>Cloud Ariba QRCode Sample Extension</name>
 
 	<organization>
-		<name>SAP AG</name>
+		<name>SAP SE</name>
 		<url>http://www.sap.com</url>
 	</organization>
-
-	<developers>
-		<developer>
-			<name>SAP HANA Cloud</name>
-			<email>netweaver-cloud@sap.com</email>
-			<url>http://hana.ondemand.com</url>
-			<organization>SAP AG</organization>
-			<organizationUrl>http://www.sap.com/</organizationUrl>
-		</developer>
-	</developers>
 
 	<licenses>
 		<license>
@@ -72,11 +62,6 @@
 				<version>${slf4j.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>org.slf4j</groupId>
-				<artifactId>slf4j-jdk14</artifactId>
-				<version>${slf4j.version}</version>
-			</dependency>
-			<dependency>
 				<groupId>org.apache.cxf</groupId>
 				<artifactId>cxf-rt-frontend-jaxws</artifactId>
 				<version>${cxf.version}</version>
@@ -88,5 +73,5 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
-	<description>A sample HCP application, demonstrating consumption of Ariba P2P API for purchase requisitions and catalog search.</description>
+	<description>A sample SAP HANA Cloud Platform application, demonstrating consumption of Ariba P2P API for purchase requisitions and catalog search.</description>
 </project>

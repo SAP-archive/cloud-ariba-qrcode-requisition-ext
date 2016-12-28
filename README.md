@@ -43,12 +43,11 @@ The HTTP API Destination looks like this:
 	Name=ariba-p2p-api
 	Description=Ariba P2P SOAP WS API Destination
 	Type=HTTP
-	URL=https\://<ariba host>/Buyer/soap/...
+	URL=https\://<Ariba instance>/Buyer/soap/<Ariba realm>
 	User=<endpoint-user>
 	Password=<endpoint-password>
 	Authentication=BasicAuthentication
 	ProxyType=Internet
-	CloudConnectorVersion=2
 	deliverTo=<deliver to name>
 	headerUniqueName=<header>
 	shipTo=<shipping address>
@@ -59,8 +58,14 @@ The HTTP API Destination looks like this:
 	requester=<requester user>
 	originatingSystemId=<system id>
 	businessUnit=<business unit>
-	requisitionComment=<requisition comment>
+	CommonCommodityCodeDomain=<common commodity code domain>
+	CommonCommodityCodeName=<common commodity code name>
+	requisitionComment=<comment for requisition>
 	requisitionName=<requisition name>
+	namespaceXMLNSvariant=<namespace XMLNS variant>
+	partNumberItem1=<supplier part number 1>
+	partNumberItem2=<supplier part number 2>
+	partNumberItem3=<supplier part number 3>
 
 ## Access the application
 
@@ -71,7 +76,7 @@ If you run the application locally, then use this URL pattern: `http://<host>:<p
 
 ### Scenario 1
 
-1. Generate the QR Code using this URL pattern: `http://<application><account>.<domain>/qrcode-app/#/item/<item_part_number_in_Ariba>`, or `http://<host>:<port>/qrcode-app/#/item/<item_part_number_in_Ariba`.
+1. Generate the QR Code using this URL pattern: `http://<application><account>.<domain>/qrcode-app/#/item/<item_part_number_in_Ariba>`, or `http://<host>:<port>/qrcode-app/#/item/<item_part_number_in_Ariba>`.
 2. Use a QR code scanner from your mobile device to show the details about this item in the application UI and submit the requisition.
 
 ### Scenario 2
@@ -85,10 +90,11 @@ If you run the application locally, then use this URL pattern: `http://<host>:<p
 
 ## Copyright and license
 
-Copyright 2016 SAP AG
+Copyright 2016 SAP SE
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this work except in compliance with the License. You may obtain a copy of the License in the LICENSE file, or at:
 
-http://www.apache.org/licenses/LICENSE-2.0
+	http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+

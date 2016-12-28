@@ -32,7 +32,7 @@ public class QRCodeFacade {
 
 	private static final String FILE_FORMAT_PNG = "png";
 	private static final String ENCODING_UTF_8 = "UTF-8";
-	private static final String ERROR_CONVERTING__FAILED = "Converting QR Code to image failed. Check if the image to be saved in the QR Code is creaated properly. Image: [ {} ]";
+	private static final String ERROR_CONVERTING__FAILED = "Converting QR Code to image failed. Check if the image to be saved in the QR Code is created properly. Image: [ {} ]";
 	private static final String ERROR_ENCODING_FAILED = "QR code encoding failed. Check if the data to be saved in the QR Code is correct. Data: [ {} ]";
 	private static final String ERROR_INVALID_URL = "The URL to be saved in the QR Code is not valid. URL: [ {} ]";
 	private static final Logger logger = LoggerFactory.getLogger(QRCodeFacade.class);
@@ -44,12 +44,10 @@ public class QRCodeFacade {
 	 * @param partNumber
 	 *            - Catalog Item Part Number
 	 * @param applicationURL
-	 *            - the url host of the started application
+	 *            - the URL host of the started application
 	 * @return ByteArrayInputStream representing QR Code image containing URL
 	 *         used to redirect to Catalog Item details page in the application
 	 *         UI.
-	 * @throws UnavailableException
-	 *             - thrown if the QR Code is not created properly.
 	 */
 	public static ByteArrayInputStream createQRCode(String partNumber, String applicationURL)
 			throws UnavailableException {

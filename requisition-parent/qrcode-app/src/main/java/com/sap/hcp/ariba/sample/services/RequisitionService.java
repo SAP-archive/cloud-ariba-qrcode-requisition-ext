@@ -1,56 +1,87 @@
 package com.sap.hcp.ariba.sample.services;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
+import java.util.Date;
 
-import javax.servlet.UnavailableException;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.xml.soap.SOAPMessage;
 
 import com.sap.hcp.ariba.sample.facade.CatalogSearchFacade;
 import com.sap.hcp.ariba.sample.facade.RequisitionImportFacade;
-import com.sap.hcp.ariba.sample.model.Item;
-import com.sap.hcp.ariba.sample.model.Requisition;
 
-import ariba.buyer.vrealm_3.catalog.WSCatalogItem;
-import ariba.buyer.vrealm_3.requisition.RequisitionImportPullReply;
+import ariba.buyer.catalog.CatalogItem;
+import ariba.buyer.requisition.Requisition;
+import ariba.buyer.requisition.RequisitionItem;
 
+/**
+ * Used to submit requisitions
+ *
+ */
 @Path("/requisition")
 public class RequisitionService {
 
+	private static final String EMPTY_STRING = "";
+	private static final String COMMA = ",";
+
+	/**
+	 * Submits requisition
+	 *
+	 * @param partNumber
+	 *            - supplier part number
+	 * @param quantity
+	 *            - items count
+	 * @return response - HTTP OK 200 for success, HTTP Error 404 Not Found if item is
+	 *         not found item or HTTP Error 500 Internal server error for
+	 *         requisition submit problem
+	 */
 	@GET
 	@Path("submit")
-	@Produces("application/json")
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response importRequisition(@QueryParam("partNumber") String partNumber,
 			@QueryParam("quantity") Double quantity) {
 
-		Response response;
-		RequisitionImportPullReply result = null;
+		Response response = null;
+		SOAPMessage result = null;
 		Requisition requisition = new Requisition();
 
-		List<Item> items = new ArrayList<>();
-
 		try {
-			WSCatalogItem wsCatalogItem = new CatalogSearchFacade().searchItem(partNumber);
-			Item item = new Item().toItem(wsCatalogItem);
+			CatalogItem catalogItem = new CatalogSearchFacade().searchItem(partNumber);
+			RequisitionItem item = preapareRequisitionItem(catalogItem);
 
-			item.setQuantity(quantity);
-			items.add(item);
-			requisition.setItems(items);
+			item.quantity(quantity);
+			requisition.items(Arrays.asList(item));
 			result = new RequisitionImportFacade().importRequisition(requisition);
-		} catch (UnavailableException e) {
-			response = Response.status(Response.Status.SERVICE_UNAVAILABLE).entity(e).build();
+		} catch (Exception e) {
+			response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e).build();
 		}
 
 		if (result == null) {
 			response = Response.status(Response.Status.NOT_FOUND).build();
 		} else {
-			response = Response.status(Response.Status.OK).entity(result).build();
+			response = Response.status(Response.Status.OK).build();
 		}
 
 		return response;
 	}
+
+	private RequisitionItem preapareRequisitionItem(CatalogItem catalogItem) {
+		return new RequisitionItem().needByDate(new Date()).commodityCode(catalogItem.getClassificationCodeValue())
+				.currency(catalogItem.getContractPrice().getCurrency()).description(catalogItem.getDescription())
+				.manPartNumber(catalogItem.getManufacturerPartId())
+				.itemPrice(getValidatedAmount(catalogItem.getContractPrice().getAmount()))
+				.supplierName(catalogItem.getSupplierName()).supplierPartNumber(catalogItem.getSupplierPartId())
+				.unitOfMeasure(catalogItem.getUnitOfMeasureValue())
+				.numberInCollection(Long.parseLong(catalogItem.getItemNumber()))
+				.originatingSystemLineNumber(Long.parseLong(catalogItem.getOriginatingLineNumber()));
+	}
+
+	private static Double getValidatedAmount(String amount) {
+		return Double.valueOf(amount.replaceAll(COMMA, EMPTY_STRING));
+	}
+
 }

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
+    <wb-module deploy-name="qrcode-app">
+        <wb-resource deploy-path="/" source-path="/target/m2e-wtp/web-resources"/>
+        <wb-resource deploy-path="/" source-path="/src/main/webapp" tag="defaultRootSource"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
+        <dependent-module archiveName="requisition-ariba-p2p-client-1.0.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/requisition-ariba-p2p-client/requisition-ariba-p2p-client">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="catalog-ariba-p2p-client-1.0.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/catalog-ariba-p2p-client/catalog-ariba-p2p-client">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <property name="context-root" value="qrcode-app"/>
+        <property name="java-output-path" value="/qrcode-app/target/classes"/>
+    </wb-module>
+</project-modules>

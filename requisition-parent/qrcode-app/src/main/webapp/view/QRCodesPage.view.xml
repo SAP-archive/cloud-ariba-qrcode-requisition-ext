@@ -38,11 +38,12 @@
 								<forms:SimpleForm maxContainerCols="2"
 									editable="false" layout="ResponsiveGridLayout" minWidth="1024"
 									title="{/items/2/shortName}">
-									<m:Image src="{/items/2/image}" height="300px" press="onPress"
+									<m:Image src="{/items/2/image}" height="300px" press="onPress" 
 										app:partNumber="{/items/2/supplierPartId}" />
 									<m:Image
 										src="/qrcode-app/api/v1/qrcode/create?partNumber={/items/2/supplierPartId}"
-										press="onPress" app:partNumber="{/items/2/supplierPartId}" />
+										press="onPress" app:partNumber="{/items/2/supplierPartId}"
+										densityAware="false"/>
 								</forms:SimpleForm>
 							</blocks>
 						</ObjectPageSubSection>

@@ -51,7 +51,7 @@
 				"transition": "slide"
 			},
 			"routes": [{
-				"pattern": "",
+				"pattern": ":?query:",
 				"name": "home",
 				"target": "home"
 			},

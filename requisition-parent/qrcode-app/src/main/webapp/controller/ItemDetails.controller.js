@@ -41,10 +41,8 @@ sap.ui.define([ "sap/ui/model/json/JSONModel", "sap/ui/core/mvc/Controller",
 					url : "/qrcode-app/api/v1/requisition/submit?partNumber="
 							+ partNumber + "&quantity=" + quantity,
 					beforeSend : BusyIndicator.show()
-				}).done(function(data) {
-					MessageBox.success("Requisition [ "
-						+ data.requisitionRequisitionIdExportItem.item[0].uniqueName.value
-						+ " ] successfully submited.");
+				}).success(function(data) {
+					MessageBox.success("Requisition successfully submited.");
 				}).fail(function(error) {
 					MessageBox.error("Submitting requisition failed.")
 				}).complete(function() {
