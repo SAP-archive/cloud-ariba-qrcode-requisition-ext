@@ -14,7 +14,6 @@ public class DestinationProperties {
 	private static final String COMMODITY_CODE = "commodityCode";
 	private static final String HEADER_UNIQUE_NAME = "headerUniqueName";
 	private static final String PASSWORD_ADAPTER = "passwordAdapter";
-	private static final String ORIGINATING_SYSTEM_ID = "originatingSystemId";
 	private static final String ORIGINATING_SYSTEM = "originatingSystem";
 	private static final String DELIVER_TO = "deliverTo";
 	private static final String BUSINESS_UNIT = "businessUnit";
@@ -66,10 +65,6 @@ public class DestinationProperties {
 
 	public String getPasswordAdapter() {
 		return getProperty(PASSWORD_ADAPTER);
-	}
-
-	public String getOrigintingSystemId() {
-		return getProperty(ORIGINATING_SYSTEM_ID);
 	}
 
 	public String getOriginatingSystem() {
