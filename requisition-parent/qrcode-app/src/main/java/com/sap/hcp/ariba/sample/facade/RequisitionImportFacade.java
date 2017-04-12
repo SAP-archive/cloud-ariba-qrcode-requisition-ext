@@ -83,7 +83,7 @@ public class RequisitionImportFacade extends Authentication {
 				.headerName(destinationProperties.getRequisitionName()).shipTo(destinationProperties.getShipTo())
 				.businessUnit(destinationProperties.getBusinessUnit()).deliverTo(destinationProperties.getDeliverTo())
 				.originatingSystem(destinationProperties.getOriginatingSystem())
-				.originatingSystemId(destinationProperties.getOrigintingSystemId())
+				.originatingSystemReferenceId(String.valueOf(System.currentTimeMillis()))
 				.passwordAdapter(destinationProperties.getPasswordAdapter()).preparer(preparer).requester(requester)
 				.headerUniqueName(destinationProperties.getHeaderUniqueName())
 				.namespaceXMLNSvariant(destinationProperties.getNamespaceXMLNSvariant()).items(RequisitionItemList);
